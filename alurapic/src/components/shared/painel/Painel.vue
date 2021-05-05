@@ -2,9 +2,9 @@
 <template>
       <div class="painel">
         <h2 class="painel-titulo">{{ titulo }}</h2>
-        <div class="painel-conteudo">  
+        <slot class="painel-conteudo">  
 
-        </div>
+        </slot>
       </div>
 
 </template>
