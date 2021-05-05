@@ -87,4 +87,8 @@ export default {
     padding: 10px;
     text-transform: uppercase;
   }
+
+  .painel *{
+    box-shadow: 5px 5px 10px black;
+  }
 </style>
