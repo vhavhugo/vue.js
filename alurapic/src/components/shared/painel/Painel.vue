@@ -1,38 +1,19 @@
 
 <template>
-<div class="corpo">
-  <h1 class="centralizado">{{ titulo }}</h1>
+      <div class="painel">
+        <h2 class="painel-titulo">{{ foto.titulo }}</h2>
+        <div class="painel-conteudo">  
 
-  <ul class="lista-fotos">
-    <li class="lista-fotos-item" v-for="foto of fotos">
-      
-    <meu-painel :titulo="foto.titulo">
-      <img class="imagem-responsiva" :src="foto.url" :alt="foto.titulo">
-    </meu-painel>
+          <img class="imagem-responsiva" :src="foto.url" :alt="foto.titulo"/>
+        
+        </div>
+      </div>
 
-    </li>
-  </ul>
-</div>
 </template>
 
 <script>
 export default {
-  data(){
-    return{
-      titulo: 'Alurapic',
-      fotos: []
-      
-    }
-  },
-  created(){
-    //let promise = this.$http.get('http://localhost:3000/v1/fotos');
-    //promise.then(res => {
-    //  res.json().then(fotos => this.fotos = fotos);
-    //});
-    this.$http.get('http://localhost:3000/v1/fotos')
-      .then(res => res.json())
-      .then(fotos => this.fotos = fotos, err => console.log(err));
-  }
+
 }
 </script>
 
