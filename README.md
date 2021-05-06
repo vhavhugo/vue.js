@@ -19,3 +19,18 @@ npm install vue-cli@2.7.0 -g
  - import VueResource from 'vue-resource';
  - Vue.use(VueResource);
 
+# Filtrar a lista da API
+   computed: {
+
+    fotosComFiltro() {
+
+      if (this.filtro) {
+        let exp = new RegExp(this.filtro.trim(), 'i');
+        return this.fotos.filter(foto => exp.test(foto.titulo));
+      } else {
+        return this.fotos;
+      }
+
+    }
+  },
+
