@@ -1,23 +1,13 @@
 <template>
-  <div class="corpo">
-    <h1 class="centralizado">{{ titulo }}</h1>
-
-      <ul class="lista-fotos">
-        <li class="lista-fotos-item" v-for="foto of fotos">
-          <div class="painel">
-            <h2 class="painel-titulo"></h2>
-            <div class="painel-conteudo">
-
-            </div>
-          </div>
-        </li>
-      </ul>
+  <div class="painel">
+    <h2 class="painel-titulo">{{ titulo }}</h2>
+      <slot class="painel-conteudo"></slot>
   </div>
 </template>
 
 <script>
 export default {
-
+    props: ['titulo']
  }
 </script>
 
