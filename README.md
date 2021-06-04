@@ -123,20 +123,25 @@ export default {
 }
 </script>
 
+# saber mais
+https://vuejs.org/v2/api/#Options-Lifecycle-Hooks
 
-
-# Filtrar a lista da API
-   computed: {
-
-    fotosComFiltro() {
-
-      if (this.filtro) {
-        let exp = new RegExp(this.filtro.trim(), 'i');
-        return this.fotos.filter(foto => exp.test(foto.titulo));
-      } else {
-        return this.fotos;
-      }
-
+# Pegando os dados da API
+# $http e promises
+<script>
+export default {
+  data() {
+    return {
+      titulo: 'Alurapic',
+      fotos: []
     }
   },
+  created() {
+    let promise = this.$http.get('http://localhost:3000/v1/fotos')
+      .then(res => res.json())
+      .then(fotos => this.fotos = fotos, err => console.log(err));
+  }
+}
+</script>
 
+# 04. Criando componentes e encapsulamentos
