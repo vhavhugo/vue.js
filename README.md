@@ -385,6 +385,7 @@ export default {
 # v-on = diretiva do vue é do tipo onclick
 # v-on:input = indica que é no input
 # $event.target.value = pega o valor do evento, dispara toda vez que estou digitando
+# A diretiva v-bind realiza uma associação que flui da fonte de dados para a view. Qualquer mudança na fonte de dados fará com que a view seja atualizada para representar o novo valor. Já a diretiva v-on realiza uma associação de evento que flui da view para a fonte de dados. Para que as mudanças realizadas por v-on sejam atualizadas na view, é necessário combinar v-on com v-bind.
 # data bindings que vai do html para a vue
 
 <input type="search" class="filtro" v-on:input="filtro = $event.target.value" placeholder="filtre por parte do título">
