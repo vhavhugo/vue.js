@@ -280,3 +280,127 @@ export default {
     text-transform: uppercase;
   }
 </style>
+
+# Fazendo funcionar o component e estilos
+
+# App.vue
+
+<template>
+  <div class="corpo">
+    <h1 class="centralizado">{{ titulo }}</h1>
+      <ul class="lista-fotos">
+        <li class="lista-fotos-item" v-for="foto of fotos">
+          <meu-painel :titulo="foto.titulo">
+              <img class="imagem-responsiva" :src="foto.url" :alt="foto.titulo">
+          </meu-painel>
+        </li>
+      </ul>
+  </div>
+</template>
+<script>
+import Painel from './components/shared/painel/Painel.vue';
+export default {
+  components: {
+    'meu-painel' : Painel
+  },
+  data() {
+    return {
+      titulo: 'Alurapic',
+      fotos: []
+    }
+  },
+  created() {
+    let promise = this.$http.get('http://localhost:3000/v1/fotos')
+      .then(res => res.json())
+      .then(fotos => this.fotos = fotos, err => console.log(err));
+  }
+}
+</script>
+<style>
+  .corpo {
+    font-family: Helvetica, sans-serif;
+    width: 96%;
+    margin: 0 auto;
+  }
+  .centralizado {
+    text-align: center;    
+  }
+  .lista-fotos {
+    list-style: none;
+  }
+  .lista-fotos .lista-fotos-item {
+    display: inline-block;
+  }
+  .imagem-responsiva {
+    width: 100%;
+  }
+</style>
+
+# C:\xampp\htdocs\vue.js\alurapic\src\components\shared\painel\Painel.vue
+
+<template>
+  <div class="painel">
+    <h2 class="painel-titulo">{{ titulo }}</h2>
+      <slot class="painel-conteudo"></slot>
+  </div>
+</template>
+<script>
+export default {
+    props: ['titulo']
+ }
+</script>
+
+<!-- scoped = serve para encapsular o css no component -->
+<style scoped>
+
+    /* estilo do painel */ 
+
+   .painel {
+    padding: 0 auto;
+    border: solid 2px grey;
+    display: inline-block;
+    margin: 5px;
+    box-shadow: 5px 5px 10px grey;
+    width: 200px;
+    height: 100%;
+    vertical-align: top;
+    text-align: center;
+  }
+
+  .painel .painel-titulo {
+    text-align: center;
+    border: solid 2px;
+    background: lightblue;
+    margin: 0 0 15px 0;
+    padding: 10px;
+    text-transform: uppercase;
+  }
+
+  * {
+    box-shadow: 5px 5px 5px;
+  }
+</style>
+
+# Filtrando
+# v-on = diretiva do vue é do tipo onclick
+# v-on:input = indica que é no input
+# $event.target.value = pega o valor do evento, dispara toda vez que estou digitando
+# data bindings que vai do html para a vue
+
+<input type="search" class="filtro" v-on:input="filtro = $event.target.value" placeholder="filtre por parte do título">
+
+# A medida que eu vou digitando mostra no filtro interpolado, é um data bindings que vai da vue para o html
+{{ filtro }}
+
+export default {
+
+  data() {
+
+    return {
+      titulo: 'Alurapic',
+      fotos: [],
+      filtro: ''
+    }
+  },
+
+}
