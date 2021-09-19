@@ -2,9 +2,14 @@
   <div class="corpo">
 
     <h1 class="centralizado">{{ titulo }}</h1>
+    
+    <!-- 
+    Evento input = dispara um evento 
+    v-on = @ 
+    -->
 
-    <input type="search" class="filtro" v-on:input="filtro = $event.target.value" placeholder="filtre pelo título da foto">
-
+    <input type="search" class="filtro" @input="filtro = $event.target.value" placeholder="filtre pelo título da foto">
+    {{ filtro }}
     <ul class="lista-fotos">
       <li class="lista-fotos-item" v-for="foto of fotosComFiltro">
         <meu-painel :titulo="foto.titulo">
@@ -53,8 +58,7 @@ export default {
 
   created() {
 
-    this.$http
-      .get('http://localhost:3000/v1/fotos')
+    this.$http.get('http://localhost:3000/v1/fotos')
       .then(res => res.json())
       .then(fotos => this.fotos = fotos, err => console.log(err));
   }

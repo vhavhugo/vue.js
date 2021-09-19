@@ -406,7 +406,7 @@ export default {
 
 }
 
-# Filtro concluido
+# Filtro concluido - App.vue
 
 <template>
   <div class="corpo">
@@ -499,3 +499,5 @@ export default {
     width: 100%;
   }
 </style>
+
+# v-show = ganha um display none;
