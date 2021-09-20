@@ -614,3 +614,17 @@ export default {
     width: 100%;
   }
 </style>
+
+Neste capítulo aprendemos:
+
+a diretiva v-on e como lidar com eventos do JavaScript
+atalho para diretiva v-on
+diferença de v-on para v-bind
+a filtrar uma lista
+compreender o uso de computed property
+que podemos acessar qualquer propriedade de data através de this
+a diretiva v-show
+detalhe entre v-show e slots
+como realizar transições com auxílio do componente transition
+a criar mais um componente
+
