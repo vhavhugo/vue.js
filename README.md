@@ -628,3 +628,200 @@ detalhe entre v-show e slots
 como realizar transições com auxílio do componente transition
 a criar mais um componente
 
+# Configurando rotas
+
+// alurapic\src\main.js
+
+import Vue from 'vue'
+import App from './App.vue'
+import VueResource from 'vue-resource';
+import VueRouter from 'vue-router';
+import { routes } from './routes';
+
+Vue.use(VueResource);
+Vue.use(VueRouter);
+
+const router = new VueRouter({ 
+  routes, 
+  mode: 'history'
+});
+
+new Vue({
+  el: '#app',
+  router,
+  render: h => h(App)
+})
+
+// alurapic\src\routes.js
+
+import Cadastro from './components/cadastro/Cadastro.vue';
+import Home from './components/home/Home.vue';
+
+export const routes = [
+    {path: '', component: Home},
+    {path: 'cadastro', component: Cadastro}
+];
+
+// alurapic\src\App.vue
+<template>
+  <div class="corpo">
+    <router-view></router-view>
+  </div>
+</template>
+
+<script>
+export default {
+
+}
+</script>
+<style>
+  .corpo {
+    font-family: Helvetica, sans-serif;
+    width: 96%;
+    margin: 0 auto;
+  }
+</style>
+
+// alurapic\src\components\home\Home.vue
+
+<template>
+  <div>
+
+    <h1 class="centralizado">{{ titulo }}</h1>
+
+    <input type="search" class="filtro" @input="filtro = $event.target.value" placeholder="filtre pelo título da foto">
+
+    <ul class="lista-fotos">
+      <li class="lista-fotos-item" v-for="foto of fotosComFiltro">
+        <meu-painel :titulo="foto.titulo">
+          <imagem-responsiva :url="foto.url" :titulo="foto.titulo"/>
+        </meu-painel>
+      </li>
+    </ul>
+
+  </div>
+</template>
+
+<script>
+
+import Painel from '../shared/painel/Painel.vue'
+import ImagemResponsiva from '../shared/imagem-responsiva/ImagemResponsiva.vue'
+
+export default {
+
+  components: {
+
+    'meu-painel': Painel,
+    'imagem-responsiva': ImagemResponsiva
+  },
+
+  data () {
+    return {
+      titulo: 'Alurapic', 
+
+      fotos: [],
+
+      filtro: ''
+    }
+  },
+
+  computed: {
+
+    fotosComFiltro() {
+
+      if (this.filtro) {
+        let exp = new RegExp(this.filtro.trim(), 'i');
+        return this.fotos.filter(foto => exp.test(foto.titulo));
+      } else {
+        return this.fotos;
+      }
+
+    }
+  },
+
+  created() {
+
+    this.$http.get('http://localhost:3000/v1/fotos')
+      .then(res => res.json())
+      .then(fotos => this.fotos = fotos, err => console.log(err));
+  }
+}
+</script>
+<style>
+
+  .centralizado {
+    text-align: center;
+  }
+
+  .lista-fotos {
+    list-style: none;
+  }
+
+  .lista-fotos .lista-fotos-item {
+    display: inline-block;
+  }
+
+  .filtro {
+    display: block;
+    width: 100%;
+  }
+</style>
+
+# Martinez seguiu os seguintes passos para ativar um sistema de rotas em sua Single Page Application:
+
+1) Baixou através do npm o módulo VueRouter registrando-o na aplicação logo em seguida.
+
+2) Criou o arquivo src/routes.js no qual todas as rotas da aplicação são definidas. Vejamos seu arquivo:
+
+// src/routes.js
+
+import Componente1 from './components/componente1/Componente1.vue';
+import Componente2 from './components/componente2/Componente2.vue';
+
+export const routes = [
+
+    { path: '/c1', componente: Componente1 },
+    { path: '/c2', componente: Componente2 }
+
+];COPIAR CÓDIGO
+3) Em src/main.jsimportou o arquivo registrando-o no Global View Object:
+
+import Vue from 'vue'
+import App from './App.vue'
+import VueResource from 'vue-resource';
+import VueRouter from 'vue-router';
+
+import { routes } from './routes';
+
+Vue.use(VueRouter);
+
+const router = new VueRouter({
+  routes, 
+  mode: 'history'
+});
+
+Vue.use(VueResource);
+
+new Vue({
+  el: '#app',
+  router,
+  render: h => h(App)
+})COPIAR CÓDIGO
+Tudo parece perfeito, mas há um erro em uma dessas etapas. Um erro sutil que pode acontecer com você. Consegue identificá-lo? Veja a resposta do instrutor logo em seguida.
+
+VER OPINIÃO DO INSTRUTOR
+Opinião do instrutor
+
+O problema foi na hora de definir as rotas, ou seja, no passo 2:
+
+export const routes = [
+
+    { path: '/c1', componente: Componente1 },
+    { path: '/c2', componente: Componente2 }
+
+];COPIAR CÓDIGO
+Veja que Martinez usou componente como nome da chave do objeto, quando na verdade deveria ser component. Esse pequeno deslize é capaz de invalidar a aplicação inteira.
+
+Lembrando também, como default, sempre utilizar um path para url de entrada:
+
+{path: '', component: Home},

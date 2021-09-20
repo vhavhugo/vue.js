@@ -1,6 +1,6 @@
 <template>
   <div class="corpo">
-  /* hora tem que exibir um componente, hora outro.
+    <router-view></router-view>
   </div>
 </template>
 
@@ -12,7 +12,7 @@ export default {
 <style>
   .corpo {
     font-family: Helvetica, sans-serif;
-    margin: 0 auto;
     width: 96%;
+    margin: 0 auto;
   }
 </style>
