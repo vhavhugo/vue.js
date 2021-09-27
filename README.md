@@ -1446,3 +1446,219 @@ export default {
 
 /* código omitido */
 </style>
+
+# Chamada de métodos
+
+Agora, se quisermos executar a lógica de exclusão, precisamos criar um método no componente pai Home que será chamada assim que o botão for clicado:
+
+<!-- alurapic/src/components/home/Home.vue -->
+<template>
+    <div>    
+        <h1 class="centralizado">Alurapic</h1>
+
+        <input type="search" class="filtro" @input="filtro = $event.target.value" placeholder="filtre pelo título da foto">
+
+        <ul class="lista-fotos">
+
+          <li class="lista-fotos-item" v-for="foto in fotosComFiltro">
+
+              <meu-painel :titulo="foto.titulo">
+
+                <imagem-responsiva :url="foto.url" :titulo="foto.titulo"/>
+
+                <meu-botao rotulo="remover" tipo="button" @click="remove()"/>
+
+              </meu-painel>
+
+          </li>
+
+        </ul>
+    </div>
+</template>
+
+<script>
+
+import Painel from '../shared/painel/Painel.vue';
+import ImagemResponsiva from '../shared/imagem-responsiva/ImagemResponsiva.vue'
+
+// Fazendo o import do botão. Não esqueça de adicioná-lo em components
+
+import Botao from '../shared/botao/Botao.vue';
+
+export default {
+
+  components: {
+
+    'meu-painel': Painel,
+    'imagem-responsiva': ImagemResponsiva, 
+    'meu-botao': Botao
+  },
+
+  methods: {
+
+    remove() {
+      alert('Precisa saber qual foto remover!');
+    }
+  }
+
+  // código omitido 
+}
+</script>
+<style>
+
+/* código omitido */
+</style>
+Veja que associamos a chamada do método remove declarada em methods através do evento click usando o atalho @click para binding deste tipo de evento. Mas quando clicamos no botão, nenhum evento é disparado!
+
+Disparando eventos nativos
+Isso acontece, porque o componente que criamos é uma caixa preta e só podemos lidar com o que ele oferece. No entanto, podemos usar o modificador .native no evento clique para que o evento click, nativo de toda tag do mundo HTML seja disparado. Isso parece que vai resolver nosso problema:
+
+<!-- alurapic/src/components/home/Home.vue -->
+<!-- código anterior omitido -->
+
+<meu-botao rotulo="remover" tipo="button" @click.native="remove()"/>
+
+<!-- código posterior omitido -->
+Agora, quando clicamos no botão, nosso alert é exibido. Excelente, mas precisamos saber qual foto clicamos para futuramente realizarmos um pedido à nossa API para que a delete.
+
+Como o nosso botão esta sendo construindo dentro de um elemento com a diretiva v-for, podemos passar o elemento que esta sendo iterado na lista diretamente para o método. Lembre-se que usamos o nome foto para referenciar cada elemento da lista. É este nome que passaremos para o método remove:
+
+<!-- alurapic/src/components/home/Home.vue -->
+
+<template>
+    <div>    
+        <h1 class="centralizado">Alurapic</h1>
+
+        <input type="search" class="filtro" @input="filtro = $event.target.value" placeholder="filtre pelo título da foto">
+
+        <ul class="lista-fotos">
+
+          <li class="lista-fotos-item" v-for="foto in fotosComFiltro">
+
+              <meu-painel :titulo="foto.titulo">
+
+                <imagem-responsiva :url="foto.url" :titulo="foto.titulo"/>
+
+                <!-- passando foto como parâmetro do método remove do componente Home -->
+                <meu-botao rotulo="remover" tipo="button" @click.native="remove(foto)"/>
+
+              </meu-painel>
+
+          </li>
+
+        </ul>
+    </div>
+</template>
+
+<script>
+
+import Painel from '../shared/painel/Painel.vue';
+import ImagemResponsiva from '../shared/imagem-responsiva/ImagemResponsiva.vue'
+
+// Fazendo o import do botão. Não esqueça de adicioná-lo em components
+
+import Botao from '../shared/botao/Botao.vue';
+
+export default {
+
+  components: {
+
+    'meu-painel': Painel,
+    'imagem-responsiva': ImagemResponsiva, 
+    'meu-botao': Botao
+  },
+
+  methods: {
+
+    remove(foto) {
+      // exibindo o título da foto selecionado
+      alert(foto.titulo);
+    }
+  }
+
+  // código omitido 
+}
+</script>
+<style>
+
+/* código omitido */
+</style>
+Excelente, quando clicamos no botão remove de cada foto vemos o título da foto correspondente sendo exibida. Mas vocês devem lembrar que precisamos confirmar a exclusão. Nesse sentido, podemos usar a função confirm para conseguir rapidamente essa funcionalidades:
+
+<!-- alurapic/src/components/home/Home.vue -->
+
+<!-- código anterior omitido -->
+  methods: {
+
+     remove(foto) {
+         if(confirm('Confirma?')) {
+             alert(foto.titulo);
+         }
+    }
+  }
+<!-- código posterior omitido -->
+Perfeito, só exibimos o alerta se confirmarmos. Mas pensem comigo. Todo lugar que precisarmos de uma confirmação teremos que ter esse código que chama o confirm. E se no lugar do confirm fosse exibido um model bonitão? Teríamos que repetir esse código em vários lugares. A ideia é colocar o código de confirmação no próprio botão, além disso, podemos ativar ou não a confirmação configurando nosso componente para tornar o botão ainda mais reutilizável. Como faremos isso? É o que veremos no próximo vídeo!
+
+# Eventos customizados
+
+Antes de continuarmos precisamos entender o seguinte. O evento clique do nosso botão chama um método no componente pai Home. Agora, precisamos que o código de confirmação seja executado pelo nosso botão, mas a lógica de execução deve ser feita no elemento pai. Em suma, nosso elemento filho precisa de alguma maneira chamar um método do seu elemento pai.
+
+Para isso, precisamos trabalhar com eventos customizados. Por exemplo, não implementamos ainda esse evento, mas quando clicamos no botão e o evento botaoAtivado for disparado, o método remove recebendo a foto deve ser chamado. Não preciso dizer que botaoAtivado será o evento que criaremos. Como todo evento, podemos associá-lo a um elemento usando o atalho @:
+
+<!-- alurapic/src/components/home/Home.vue -->
+
+<!-- código anterior omitido -->
+
+<meu-botao rotulo="remover" tipo="button" @botaoAtivado="remove(foto)"/>
+
+<!-- código anterior omitido -->
+A ideia é o seguinte. Quando nosso componente Botao for clicado, ele disparará um o evento customizado botaoAtivado, mas apenas se o usuário confirmar. Quando esse evento for disparado, o método associado ao nome do nosso evento será executado.
+
+Agora, precisamos alterar Botao para que dispare nosso evento toda vez que for clicado. Para isso, no seu template, vamos adicionar o evento click que chamará um método do componente. É nele que realizamos a lógica de confirmação disparando o evento ou não:
+
+<!-- alurapic/src/components/shared/botao/Botao.vue -->
+<template>
+    <button class="botao botao-perigo" :type="tipo" @click="disparaAcao()">{{rotulo}}</button>
+</template>
+<script>
+export default {
+
+   props: ['tipo', 'rotulo'],
+   methods: {
+
+       disparaAcao() {
+
+
+           if(confirm('Confirma operacao?')) {
+                this.$emit('botaoAtivado');
+            }
+       }
+   }
+}
+</script>    
+
+<style scoped>
+    .botao {
+        display: inline-block;
+        padding: 10px;
+        border-radius: 3px;
+        margin: 10px;
+        font-size: 1.2em;
+    }
+
+    .botao-perigo {
+        background: firebrick;
+        color: white;
+    }
+
+    .botao-padrao {
+        background: darkcyan;
+        color: white;
+    }
+
+</style>
+É através de this.$emit que disparamos um evento customizado passando como nome do parâmetro o evento.
+
+Com o CLI rodando, nosso projeto com certeza foi recarregado pelo seu navegador, inclusive já podemos realizar nosso teste. Quando clicamos em remover, o diálogo de confirmação é exibido. Se não confirmamos, nada é exibido na tela, quando confirmamos, o alerta com o título da foto é exibido.
+
+Apesar de funcionar nosso botão ainda esta incompleto. Precisamos fazer com que o componente possa confirmar ou não uma ação, inclusive aplicar a classe correta de acordo com seu estilo. é isso que veremos no próximo vídeo.
