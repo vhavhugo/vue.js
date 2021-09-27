@@ -2009,3 +2009,33 @@ Agora, se voltarmos para Home e removermos : da propriedade confirmacao será ex
 vue.common.js?e881:519[Vue warn]: Invalid prop: type check failed for prop "confirmacao". Expected Boolean, got String. 
 (found in component <meu-botao> at Botao.vue)
 Muito mais fácil de detectar o problema, não? Só não se esqueça de voltar com os dois pontos lá na propriedade que modificamos por último.
+
+# Validando dados recebidos pelos componentes
+
+Vimos neste capítulo a possibilidade de validar os valores das props dos nosso componentes no próprio componente.
+
+Supondo que tenhamos a propriedade quantidade, qual das opções abaixo valida essa propriedade aceitando apenas números ao mesmo tempo tornando a propriedade obrigatória?
+
+Selecione uma alternativa
+
+ props: {
+
+   quantidade: {
+       type: Number
+   }
+
+}
+
+ props: {
+
+   quantidade: {
+       type: Number, 
+       required: true
+   }
+
+}
+
+ props: {
+
+   quantidade: Number
+}
