@@ -1,15 +1,13 @@
 <template>
   <div>
-
     <h1 class="centralizado">{{ titulo }}</h1>
-
     <input type="search" class="filtro" @input="filtro = $event.target.value" placeholder="filtre pelo título da foto">
 
     <ul class="lista-fotos">
       <li class="lista-fotos-item" v-for="foto of fotosComFiltro">
         <meu-painel :titulo="foto.titulo">
           <imagem-responsiva :url="foto.url" :titulo="foto.titulo"/>
-          <meu-botao tipo="button" rotulo="REMOVER" />
+          <meu-botao tipo="button" rotulo="REMOVER" @click.native="remove(foto)" />
         </meu-painel>
       </li>
     </ul>
@@ -53,6 +51,14 @@ export default {
         return this.fotos;
       }
 
+    }
+  },
+
+  methods: {
+    remove(fotos) {
+      if(confirm('Confirma operação?')){
+        alert('Remover a foto!'+ fotos.titulo);
+      }
     }
   },
 

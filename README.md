@@ -1353,3 +1353,96 @@ a criar um menu baseado em nossas configurações de rota
 a tornar o menu um componente
 executar efeito de transição na troca de páginas
 a validar propriedades em um componente
+
+# Nosso botão de 1001 utilidades!
+
+Você já deve ter percebido que o botão é um forte candidato para tornamos um componente. Ele será bastante configurável e será usado não apenas em Home, mas em Cadastro também em breve.
+
+Vamos criar o componente alurapic/src/shared/botao/Botao.vue:
+
+<!-- alurapic/src/components/shared/botao/Botao.vue -->
+<template>
+    <button class="botao botao-perigo" :type="tipo">{{rotulo}}</button>
+</template>
+<script>
+export default {
+
+   props: ['tipo', 'rotulo'],
+}
+</script>    
+
+<style scoped>
+    .botao {
+        display: inline-block;
+        padding: 10px;
+        border-radius: 3px;
+        margin: 10px;
+        font-size: 1.2em;
+    }
+
+    .botao-perigo {
+        background: firebrick;
+        color: white;
+    }
+
+    .botao-padrao {
+        background: darkcyan;
+        color: white;
+    }
+
+</style>
+Vamos por partes. Primeiro, vamos fazer com que o botão receba apenas como parâmetro do componente pai o seu tipo e rótulo. Por enquanto, vamos deixar fixo a classe botao-perigo.
+
+Agora que já temos o componente criado, vamos importá-lo em Home e utilizá-lo dentro do painel, logo abaixo do nosso componente de imagem responsiva:
+
+<!-- alurapic/src/components/home/Home.vue -->
+
+<template>
+    <div>    
+        <h1 class="titulo">Alurapic</h1>
+
+        <input type="search" class="filtro" @input="filtro = $event.target.value" placeholder="filtre pelo título da foto">
+
+        <ul class="lista-fotos">
+
+          <li class="lista-fotos-item" v-for="foto of fotosComFiltro">
+
+              <meu-painel :titulo="foto.titulo">
+
+                <imagem-responsiva :url="foto.url" :titulo="foto.titulo"/>
+
+                <meu-botao rotulo="remover" tipo="button"/>
+
+              </meu-painel>
+
+          </li>
+
+        </ul>
+    </div>
+</template>
+
+<script>
+
+import Painel from '../shared/painel/Painel.vue';
+import ImagemResponsiva from '../shared/imagem-responsiva/ImagemResponsiva.vue'
+
+// Fazendo o import do botão. Não esqueça de adicioná-lo em components
+
+import Botao from '../shared/botao/Botao.vue';
+
+export default {
+
+  components: {
+
+    'meu-painel': Painel,
+    'imagem-responsiva': ImagemResponsiva, 
+    'meu-botao': Botao
+  },
+
+  // código omitido 
+}
+</script>
+<style>
+
+/* código omitido */
+</style>
