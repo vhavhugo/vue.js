@@ -825,3 +825,27 @@ Veja que Martinez usou componente como nome da chave do objeto, quando na verdad
 Lembrando também, como default, sempre utilizar um path para url de entrada:
 
 {path: '', component: Home},
+
+# Criar component cadastro
+# Vamos criá-lo em alurapic/src/components/cadastro/Cadastro.vue. Por enquanto será uma página simples, com apenas um título:
+
+<!-- alurapic/src/components/cadastro/Cadastro.vue -->
+
+<template>
+  <div>
+    <h1 class="centralizado">Cadastro</h1>
+  </div>
+</template>
+
+<script>
+
+export default {
+
+}
+
+</script>
+<style scoped>
+    .centralizado {
+        text-align: center;
+    }
+</style>
