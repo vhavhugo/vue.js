@@ -783,7 +783,7 @@ export const routes = [
     { path: '/c1', componente: Componente1 },
     { path: '/c2', componente: Componente2 }
 
-];COPIAR CÓDIGO
+];
 3) Em src/main.jsimportou o arquivo registrando-o no Global View Object:
 
 import Vue from 'vue'
@@ -806,7 +806,7 @@ new Vue({
   el: '#app',
   router,
   render: h => h(App)
-})COPIAR CÓDIGO
+})
 Tudo parece perfeito, mas há um erro em uma dessas etapas. Um erro sutil que pode acontecer com você. Consegue identificá-lo? Veja a resposta do instrutor logo em seguida.
 
 VER OPINIÃO DO INSTRUTOR
@@ -819,7 +819,7 @@ export const routes = [
     { path: '/c1', componente: Componente1 },
     { path: '/c2', componente: Componente2 }
 
-];COPIAR CÓDIGO
+];
 Veja que Martinez usou componente como nome da chave do objeto, quando na verdade deveria ser component. Esse pequeno deslize é capaz de invalidar a aplicação inteira.
 
 Lembrando também, como default, sempre utilizar um path para url de entrada:
@@ -855,7 +855,7 @@ export default {
 Vou estipular que os seguintes endereços serão válidos:
 
 http://localhost:8080/#/   
-http://localhost:8080/#/cadastroCOPIAR CÓDIGO
+http://localhost:8080/#/cadastro
 O primeiro carregará o componente Home e o segundo o componente Cadastro. Você deve estar achando estranho o # no endereço. Ele é importante, porque eles fazem com que o browser não dispare uma requisição para o servidor, pois não é uma URL válida. No entanto, sendo algo totalmente válido para o VueRouter, ele extrairá a informação que vem logo após o # para saber qual componente carregar. Ele faz um dê para entre o pedaço da url que vem logo após o # com o seu respectivo componente.
 
 Sendo assim, é uma boa prática declarar as rotas da aplicação em um arquivo em separado. Vamos criar o arquivo alurapic/src/routes.js. Nele exportaremos uma constante que um um array:
@@ -864,7 +864,7 @@ Sendo assim, é uma boa prática declarar as rotas da aplicação em um arquivo 
 
 export const routes = [
   /* rotas aqui */
-];COPIAR CÓDIGO
+];
 Quando queremos exportar o valor de uma variável é necessário usar o prefixo const. Agora, vamos importar os componentes Home e Cadastro que equivalem a páginas:
 
 // alurapic/src/routes.js
@@ -872,7 +872,7 @@ Quando queremos exportar o valor de uma variável é necessário usar o prefixo 
 import Home from './components/home/Home.vue';
 import Cadastro from './components/cadastro/Cadastro.vue';
 
-export const routes = [COPIAR CÓDIGO
+export const routes = [
 No array routes, precisamos ter um objeto Javascript com as propriedades path e component. O primeiro é a caminho que identifica o componente, o segundo o componente que será carregado para este caminho presente na url do navegador:
 
 // alurapic/src/routes.js
@@ -885,7 +885,7 @@ export const routes = [
     { path: '', component: Home },
     { path: '/cadastro', component: Cadastro }
 
-];COPIAR CÓDIGO
+];
 Veja que para o componente Home usamos o path como uma string em branco. Esse é o padrão quando queremos acessar o componente como /#/. Já path do componente Cadastro é /cadastro que se traduzirá em uma URL como http://localhost:8080/#/cadastro.
 
 Mas inda falta mais duas configurações. A primeira, é passar as rotas que configuramos para o VueRouter. Para isso, vamos importar routes de routes.js:
@@ -906,7 +906,7 @@ Vue.use(VueResource);
 new Vue({
   el: '#app',
   render: h => h(App)
-})COPIAR CÓDIGO
+})
 Agora que importamos a rota, vamos criar uma instância de VueRouter passando como parâmetro um objeto JavaScript com a propriedade routes que deve receber como parâmetro as rotas que importamos. No caso, tanto a propriedade quando as rotas importadas possuem o mesmo nome:
 
 // alurapic/src/main.js
@@ -929,7 +929,7 @@ Vue.use(VueResource);
 new Vue({
   el: '#app',
   render: h => h(App)
-})COPIAR CÓDIGO
+})
 Em ES6, quando o valor e a propriedade possuem o mesmo nome, podemos simplesmente fazer assim:
 
 // alurapic/src/main.js
@@ -952,7 +952,7 @@ Vue.use(VueResource);
 new Vue({
   el: '#app',
   render: h => h(App)
-})COPIAR CÓDIGO
+})
 Agora que temos efetivamente nossas rotas, precisamos passá-la como parâmetro para a view instance, aquela que renderiza nosso componente App:
 
 // alurapic/src/main.js
@@ -976,7 +976,7 @@ new Vue({
   el: '#app',
   router,
   render: h => h(App)
-})COPIAR CÓDIGO
+})
 Como o nome da propriedade tem o mesmo nome da nossa variável, podemos fazer apenas router ao invés de router: router.
 
 Por fim, precisamos usar uma diretiva especial do VueRouter, uma que indica em que lugar do template de App os componentes serão carregados. Essa diretiva se chama router-view:
@@ -1000,7 +1000,7 @@ Por fim, precisamos usar uma diretiva especial do VueRouter, uma que indica em q
     margin: 0 auto;
     width: 96%;
   }
-</style>COPIAR CÓDIGO
+</style>
 Quando o CLI rodando, veja que nossa aplicação será aberta automaticamente na URL http://localhost:8080/#/. Se quisermos acessar a página de cadastro, fazemos http://localhost:8080/#/cadastro.
 
 Por fim, não há nada de errado com o # no endereço, é algo completamente válido e muito usado. No entanto, podemos removê-lo usando o modo history do VueRouter. No entanto, para este modo funcionar, seu backend que compartilha sua aplicação em Vue deve retornar sempre index.html para todos para qualquer endereço que chegar até ele, inclusive deve retornar index.html para páginas de erro. O Vue CLI já faz isso por padrão, mas se você for hospedar sua aplicação seja lá onde for, lembre-se desse detalhe.
@@ -1029,7 +1029,7 @@ new Vue({
   el: '#app',
   router,
   render: h => h(App)
-})COPIAR CÓDIGO
+})
 Veja que agora podemos acessar Home através de http://localhost:8080/ e Cadastro através de http://localhost:8080/cadastro. Esses endereços não dispararam uma requisição para o servidor e serão interceptados pelo VueRouter para saber qual componente carregar.
 
 Fiz tudo direitinho, mas...
@@ -1051,7 +1051,7 @@ export const routes = [
     { path: '/c1', componente: Componente1 },
     { path: '/c2', componente: Componente2 }
 
-];COPIAR CÓDIGO
+];
 3) Em src/main.jsimportou o arquivo registrando-o no Global View Object:
 
 import Vue from 'vue'
@@ -1074,7 +1074,7 @@ new Vue({
   el: '#app',
   router,
   render: h => h(App)
-})COPIAR CÓDIGO
+})
 Tudo parece perfeito, mas há um erro em uma dessas etapas. Um erro sutil que pode acontecer com você. Consegue identificá-lo? Veja a resposta do instrutor logo em seguida.
 
 # O menu da aplicação
@@ -1102,7 +1102,7 @@ Vamos alterar alurapic/src/App.vue e adicionar um menu. Não vamos nos preocupar
 
   /* código omitido */
 
-</style>COPIAR CÓDIGO
+</style>
 Nosso menu é exibido e quando clicamos no link Cadastro somos direcionados para o componente Cadastro. Mas nem tudo esta perfeito. Veja que nossas navegações estão disparando o carregamento da página. Se estamos em uma Single Page Application, isso não deveria acontecer, pois já temos tudo o que precisamos carregado. O problema esta no uso da tag a para realizar a navegação. Para resolver esse problema, precisamos usar o componente router-link:
 
 <!-- alurapic/src/App.vue -->
@@ -1127,7 +1127,7 @@ Nosso menu é exibido e quando clicamos no link Cadastro somos direcionados para
 
   /* código omitido */
 
-</style>COPIAR CÓDIGO
+</style>
 Agora sim! Veja que a página não recarregando enquanto clicamos nos itens do menu. Muito melhor! No entanto, se olharmos o arquivo alurapic/src/routes.js já temos a lista com todas as rotas definidas nesse arquivo. Lá temos o path de cada rota, mas não temos o título. Não tem problema, vamos adicionar a propriedade titulo no array de routes. Isso não causará nenhum erro devido a natureza dinâmica do JavaScript e nos permitirá importar esse array para criar nosso menu dinamicamente. Toda vez que uma nova rota for adicionada em routes, automaticamente ela aparecerá como item do menu:
 
 // alurapic/src/routes.js
@@ -1142,7 +1142,7 @@ export const routes = [
     { path: '', component: Home, titulo: 'Home' },
     { path: '/cadastro', component: Cadastro, titulo: 'Cadastro' }
 
-];COPIAR CÓDIGO
+];
 Agora, importando routes em App e disponibilizando a lista de rotas através da função data. Ah, desta vez vamos usar in no lugar de for na diretiva v-for. Eu prefiro of, mas se você vem do Angular 1 pode preferir o in:
 
 <!-- alurapic/src/App.vue -->
@@ -1186,5 +1186,69 @@ export default {
     margin: 0 auto;
     width: 96%;
   }
-</style>COPIAR CÓDIGO
+</style>
 Vocês devem estar estranhando a linha <router-link :to="route.path ? route.path : '/'">{{route.titulo}}</router-link>. Precisamos testar essa condição, porque o path de Home é um string vazia, mas quando usamos no componente router-link precisamos usar um /. Aliás, nosso menu é um forte candidato para se tornar um componente, mas não faremos isso agora.
+
+# Animando transições de página
+
+Uma das coisas mais bonitas do mundo da programação é podermos aplicar com conhecimento já adquirido e aplicá-lo em outros contextos. No capítulo anterior aprendemos a trabalhar com transições. Se refletirmos por um instante, a saída de uma página para a outra é uma mudança de estado, logo, passível de animação.
+
+Vamos aplicar a mesma transição que fizemos com o componente Painel com a única diferença que será executada mais rapidamente. Aprendemos que precisamos envolver o componente desejado como alvo da transição através da tag transition. Sendo assim, qual componente você acha que devemos envolver para conseguir realizar transições entre páginas? O componente router-view em App!.
+
+Alterando App:
+
+<!-- alurapic/src/App.vue -->
+
+<template>
+  <div class="corpo">
+
+    <nav>
+    <ul>    
+      <li v-for="route in routes">
+        <router-link :to="route.path ? route.path : '/'">
+          {{route.titulo}}
+        </router-link>
+      </li>   
+    </ul>
+  </nav>
+
+    <transition name="pagina">
+      <router-view></router-view>
+    </transition>
+
+  </div>
+</template>
+<script>
+
+import { routes }  from './routes';
+
+export default {
+
+  data() {
+
+    return {
+
+      routes
+    }
+
+  }
+
+}
+</script>
+<style>
+
+  .corpo {
+    font-family: Helvetica, sans-serif;
+    margin: 0 auto;
+    width: 96%;
+  }
+
+  .pagina-enter-active, .pagina-leave-active {
+    transition: opacity .3s
+  }
+  .pagina-enter, .pagina-leave-active {
+    opacity: 0
+  }
+</style>
+Veja que usamos os mesmos estilos, com a diferença que usamos como name do componente transitiono valor pagina e a transição foi reduzida para 200 milissegundos. Experimente clicar nos itens do menu da aplicação e veja a transição entre páginas sendo realizada. Se você domina CSS pode aplicar transições mais elaboradas, o mais importante é saber como integrá-las ao Vue.
+
