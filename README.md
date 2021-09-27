@@ -1339,3 +1339,17 @@ export default {
   }
 </style>
 Excelente, quando a página é recarregada tudo continua funcionando como antes. Agora que temos o menu isolado em um componente, fica mais fácil aplicar aquele estilo profissional ao menu. Mas isso eu deixarei para os meus alunos mestres em CSS.
+
+# Neste capítulo aprendemos:
+
+a criar um novo componente/página
+o conceito de Single Page Application
+extrair de App.vue um componente de página, separando responsabilidades
+a baixar e registrar o módulo VueRouter
+criar rotas da aplicação
+o componente router-view
+o modo history vs hash
+a criar um menu baseado em nossas configurações de rota
+a tornar o menu um componente
+executar efeito de transição na troca de páginas
+a validar propriedades em um componente
