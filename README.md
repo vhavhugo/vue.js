@@ -849,3 +849,342 @@ export default {
         text-align: center;
     }
 </style>
+
+# Para que o VueRouter saiba qual componente carregar precisamos registrar rotas para esses componentes. Rotas nada mais são que endereços especiais que são interceptados pelo VueRouter e a partir do endereço ele decidirá qual componente deve ser exibido em App que é o primeiro componente a ser exibido em nossa aplicação.
+
+Vou estipular que os seguintes endereços serão válidos:
+
+http://localhost:8080/#/   
+http://localhost:8080/#/cadastroCOPIAR CÓDIGO
+O primeiro carregará o componente Home e o segundo o componente Cadastro. Você deve estar achando estranho o # no endereço. Ele é importante, porque eles fazem com que o browser não dispare uma requisição para o servidor, pois não é uma URL válida. No entanto, sendo algo totalmente válido para o VueRouter, ele extrairá a informação que vem logo após o # para saber qual componente carregar. Ele faz um dê para entre o pedaço da url que vem logo após o # com o seu respectivo componente.
+
+Sendo assim, é uma boa prática declarar as rotas da aplicação em um arquivo em separado. Vamos criar o arquivo alurapic/src/routes.js. Nele exportaremos uma constante que um um array:
+
+// alurapic/src/routes.js
+
+export const routes = [
+  /* rotas aqui */
+];COPIAR CÓDIGO
+Quando queremos exportar o valor de uma variável é necessário usar o prefixo const. Agora, vamos importar os componentes Home e Cadastro que equivalem a páginas:
+
+// alurapic/src/routes.js
+
+import Home from './components/home/Home.vue';
+import Cadastro from './components/cadastro/Cadastro.vue';
+
+export const routes = [COPIAR CÓDIGO
+No array routes, precisamos ter um objeto Javascript com as propriedades path e component. O primeiro é a caminho que identifica o componente, o segundo o componente que será carregado para este caminho presente na url do navegador:
+
+// alurapic/src/routes.js
+
+import Home from './components/home/Home.vue';
+import Cadastro from './components/cadastro/Cadastro.vue';
+
+export const routes = [
+
+    { path: '', component: Home },
+    { path: '/cadastro', component: Cadastro }
+
+];COPIAR CÓDIGO
+Veja que para o componente Home usamos o path como uma string em branco. Esse é o padrão quando queremos acessar o componente como /#/. Já path do componente Cadastro é /cadastro que se traduzirá em uma URL como http://localhost:8080/#/cadastro.
+
+Mas inda falta mais duas configurações. A primeira, é passar as rotas que configuramos para o VueRouter. Para isso, vamos importar routes de routes.js:
+
+// alurapic/src/main.js
+
+import Vue from 'vue'
+import App from './App.vue'
+import VueResource from 'vue-resource';
+import VueRouter from 'vue-router';
+
+// tem que vir entre chaves, porque não é default
+import { routes } from './routes';
+
+Vue.use(VueRouter);
+Vue.use(VueResource);
+
+new Vue({
+  el: '#app',
+  render: h => h(App)
+})COPIAR CÓDIGO
+Agora que importamos a rota, vamos criar uma instância de VueRouter passando como parâmetro um objeto JavaScript com a propriedade routes que deve receber como parâmetro as rotas que importamos. No caso, tanto a propriedade quando as rotas importadas possuem o mesmo nome:
+
+// alurapic/src/main.js
+
+import Vue from 'vue'
+import App from './App.vue'
+import VueResource from 'vue-resource';
+import VueRouter from 'vue-router';
+
+import { routes } from './routes';
+
+Vue.use(VueRouter);
+
+const router = new VueRouter({
+  routes : routes
+});
+
+Vue.use(VueResource);
+
+new Vue({
+  el: '#app',
+  render: h => h(App)
+})COPIAR CÓDIGO
+Em ES6, quando o valor e a propriedade possuem o mesmo nome, podemos simplesmente fazer assim:
+
+// alurapic/src/main.js
+
+import Vue from 'vue'
+import App from './App.vue'
+import VueResource from 'vue-resource';
+import VueRouter from 'vue-router';
+
+import { routes } from './routes';
+
+Vue.use(VueRouter);
+
+const router = new VueRouter({
+  routes
+});
+
+Vue.use(VueResource);
+
+new Vue({
+  el: '#app',
+  render: h => h(App)
+})COPIAR CÓDIGO
+Agora que temos efetivamente nossas rotas, precisamos passá-la como parâmetro para a view instance, aquela que renderiza nosso componente App:
+
+// alurapic/src/main.js
+
+import Vue from 'vue'
+import App from './App.vue'
+import VueResource from 'vue-resource';
+import VueRouter from 'vue-router';
+
+import { routes } from './routes';
+
+Vue.use(VueRouter);
+
+const router = new VueRouter({
+  routes : routes
+});
+
+Vue.use(VueResource);
+
+new Vue({
+  el: '#app',
+  router,
+  render: h => h(App)
+})COPIAR CÓDIGO
+Como o nome da propriedade tem o mesmo nome da nossa variável, podemos fazer apenas router ao invés de router: router.
+
+Por fim, precisamos usar uma diretiva especial do VueRouter, uma que indica em que lugar do template de App os componentes serão carregados. Essa diretiva se chama router-view:
+
+<!-- alurapic/src/App.vue -->
+<template>
+  <div class="corpo">
+
+    <router-view></router-view>
+
+  </div>
+</template>
+
+<script>
+</script>
+
+<style>
+
+  .corpo {
+    font-family: Helvetica, sans-serif;
+    margin: 0 auto;
+    width: 96%;
+  }
+</style>COPIAR CÓDIGO
+Quando o CLI rodando, veja que nossa aplicação será aberta automaticamente na URL http://localhost:8080/#/. Se quisermos acessar a página de cadastro, fazemos http://localhost:8080/#/cadastro.
+
+Por fim, não há nada de errado com o # no endereço, é algo completamente válido e muito usado. No entanto, podemos removê-lo usando o modo history do VueRouter. No entanto, para este modo funcionar, seu backend que compartilha sua aplicação em Vue deve retornar sempre index.html para todos para qualquer endereço que chegar até ele, inclusive deve retornar index.html para páginas de erro. O Vue CLI já faz isso por padrão, mas se você for hospedar sua aplicação seja lá onde for, lembre-se desse detalhe.
+
+Para ativarmos o modo history basta adicionarmos a propriedade mode com o valor history na instância de VueRouter.
+
+import Vue from 'vue'
+import App from './App.vue'
+import VueResource from 'vue-resource';
+import VueRouter from 'vue-router';
+
+import { routes } from './routes';
+
+Vue.use(VueRouter);
+
+// adicionando a propriedade mode com o valor history.
+
+const router = new VueRouter({
+  routes, 
+  mode: 'history'
+});
+
+Vue.use(VueResource);
+
+new Vue({
+  el: '#app',
+  router,
+  render: h => h(App)
+})COPIAR CÓDIGO
+Veja que agora podemos acessar Home através de http://localhost:8080/ e Cadastro através de http://localhost:8080/cadastro. Esses endereços não dispararam uma requisição para o servidor e serão interceptados pelo VueRouter para saber qual componente carregar.
+
+Fiz tudo direitinho, mas...
+PRÓXIMA ATIVIDADE
+
+Martinez seguiu os seguintes passos para ativar um sistema de rotas em sua Single Page Application:
+
+1) Baixou através do npm o módulo VueRouter registrando-o na aplicação logo em seguida.
+
+2) Criou o arquivo src/routes.js no qual todas as rotas da aplicação são definidas. Vejamos seu arquivo:
+
+// src/routes.js
+
+import Componente1 from './components/componente1/Componente1.vue';
+import Componente2 from './components/componente2/Componente2.vue';
+
+export const routes = [
+
+    { path: '/c1', componente: Componente1 },
+    { path: '/c2', componente: Componente2 }
+
+];COPIAR CÓDIGO
+3) Em src/main.jsimportou o arquivo registrando-o no Global View Object:
+
+import Vue from 'vue'
+import App from './App.vue'
+import VueResource from 'vue-resource';
+import VueRouter from 'vue-router';
+
+import { routes } from './routes';
+
+Vue.use(VueRouter);
+
+const router = new VueRouter({
+  routes, 
+  mode: 'history'
+});
+
+Vue.use(VueResource);
+
+new Vue({
+  el: '#app',
+  router,
+  render: h => h(App)
+})COPIAR CÓDIGO
+Tudo parece perfeito, mas há um erro em uma dessas etapas. Um erro sutil que pode acontecer com você. Consegue identificá-lo? Veja a resposta do instrutor logo em seguida.
+
+# O menu da aplicação
+Vamos alterar alurapic/src/App.vue e adicionar um menu. Não vamos nos preocupar com estilização do menu, apenas um menu funcional para não perdemos o foco nesta parte tão importante:
+
+<!-- alurapic/src/App.vue -->
+
+<template>
+  <div class="corpo">
+
+    <nav>
+      <ul>       
+          <li><a href="/">Home</a></li>
+          <li><a href="/cadastro">Cadastro</a></li>
+      </ul>
+    </nav>
+
+    <router-view></router-view>
+
+  </div>
+</template>
+<script>
+</script>
+<style>
+
+  /* código omitido */
+
+</style>COPIAR CÓDIGO
+Nosso menu é exibido e quando clicamos no link Cadastro somos direcionados para o componente Cadastro. Mas nem tudo esta perfeito. Veja que nossas navegações estão disparando o carregamento da página. Se estamos em uma Single Page Application, isso não deveria acontecer, pois já temos tudo o que precisamos carregado. O problema esta no uso da tag a para realizar a navegação. Para resolver esse problema, precisamos usar o componente router-link:
+
+<!-- alurapic/src/App.vue -->
+
+<template>
+  <div class="corpo">
+
+    <nav>
+      <ul>       
+          <li><router-link to="/">Home</router-link></li>
+          <li><router-link to="/cadastro">Cadastro</router-link></li>
+      </ul>
+    </nav>
+
+    <router-view></router-view>
+
+  </div>
+</template>
+<script>
+</script>
+<style>
+
+  /* código omitido */
+
+</style>COPIAR CÓDIGO
+Agora sim! Veja que a página não recarregando enquanto clicamos nos itens do menu. Muito melhor! No entanto, se olharmos o arquivo alurapic/src/routes.js já temos a lista com todas as rotas definidas nesse arquivo. Lá temos o path de cada rota, mas não temos o título. Não tem problema, vamos adicionar a propriedade titulo no array de routes. Isso não causará nenhum erro devido a natureza dinâmica do JavaScript e nos permitirá importar esse array para criar nosso menu dinamicamente. Toda vez que uma nova rota for adicionada em routes, automaticamente ela aparecerá como item do menu:
+
+// alurapic/src/routes.js
+
+import Home from './components/home/Home.vue';
+import Cadastro from './components/cadastro/Cadastro.vue';
+
+// adicionando a propriedade título
+
+export const routes = [
+
+    { path: '', component: Home, titulo: 'Home' },
+    { path: '/cadastro', component: Cadastro, titulo: 'Cadastro' }
+
+];COPIAR CÓDIGO
+Agora, importando routes em App e disponibilizando a lista de rotas através da função data. Ah, desta vez vamos usar in no lugar de for na diretiva v-for. Eu prefiro of, mas se você vem do Angular 1 pode preferir o in:
+
+<!-- alurapic/src/App.vue -->
+
+<template>
+  <div class="corpo">
+
+    <nav>
+      <ul>       
+          <li v-for="route in routes">
+            <router-link :to="route.path ? route.path : '/'">{{route.titulo}}</router-link>
+          </li>
+      </ul>
+    </nav>
+
+     <router-view></router-view>
+
+  </div>
+</template>
+<script>
+
+import { routes }  from './routes';
+
+export default {
+
+  data() {
+
+    return {
+
+      routes
+    }
+
+  }
+
+}
+</script>
+<style>
+
+  .corpo {
+    font-family: Helvetica, sans-serif;
+    margin: 0 auto;
+    width: 96%;
+  }
+</style>COPIAR CÓDIGO
+Vocês devem estar estranhando a linha <router-link :to="route.path ? route.path : '/'">{{route.titulo}}</router-link>. Precisamos testar essa condição, porque o path de Home é um string vazia, mas quando usamos no componente router-link precisamos usar um /. Aliás, nosso menu é um forte candidato para se tornar um componente, mas não faremos isso agora.
