@@ -1,17 +1,8 @@
 <template>
   <div class="corpo">
-  <!-- Hora tem que exibir um componente, hora outro. -->
-    <nav>
-      <ul>
-        <!-- <li><router-link to="/">Home</router-link></li> -->
-        <!-- <li><router-link to="/cadastro">Cadastro</router-link></li> -->
-          <li v-for="route in routes">
-            <router-link :to="route.path ? route.path : '/'">
-              {{ route.titulo }}
-            </router-link>
-          </li>
-      </ul>
-    </nav>
+
+    <meu-menu :rotas="routes" />
+
     <transition name="pagina">
       <router-view></router-view>
     </transition>
@@ -21,8 +12,12 @@
 <script>
 
 import { routes } from './routes';
+import Menu from './components/shared/menu/Menu.vue';
 
 export default {
+  components: {
+    'meu-menu' : Menu
+  },
   data() {
     return {
       routes
